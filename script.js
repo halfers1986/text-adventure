@@ -161,7 +161,9 @@ function initGame() {
 	enterBedroom();
 	modal.style.display = "none";
 	modalOverlay.style.display = "none";
-};
+	} else {
+		document.getElementById("charactername").insertAdjacentHTML("beforeend", '<span style="color: red"> This field is required</span>')
+	};
 }
 
 function updateScroll() {
