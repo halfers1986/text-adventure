@@ -4,14 +4,7 @@ const goForward = document.getElementById('forward');
 const goBack = document.getElementById('backward');
 const goLeft = document.getElementById('left');
 const goRight = document.getElementById('right');
-const useItem1 = document.getElementById('use1');
-const useItem2 = document.getElementById('use2');
-const useItem3 = document.getElementById('use3');
-const useItem4 = document.getElementById('use4');
-const useItem5 = document.getElementById('use5');
-const useItem6 = document.getElementById('use6');
-const useItem7 = document.getElementById('use7');
-const useItem8 = document.getElementById('use8');
+
 const attack = document.getElementById('attack');
 const pickUp = document.getElementById('pickup');
 const search = document.getElementById('search');
@@ -26,16 +19,33 @@ const item6 = document.getElementById('item6');
 const item7 = document.getElementById('item7');
 const item8 = document.getElementById('item8');
 
-let content1 = item1.innerHTML;
-let content2 = item2.innerHTML;
-let content3 = item3.innerHTML;
-let content4 = item4.innerHTML;
-let content5 = item5.innerHTML;
-let content6 = item6.innerHTML;
-let content7 = item7.innerHTML;
-let content8 = item8.innerHTML;
+const inventory = [];
 
-// const inventory = {"", "", "", "", "", "", "", ""};
+let content1 = inventory[0];
+let content2 = inventory[1];
+let content3 = inventory[2];
+let content4 = inventory[3];
+let content5 = inventory[4];
+let content6 = inventory[5];
+let content7 = inventory[6];
+let content8 = inventory[7];
+
+let whereAmI = "nowhere"
+
+function updateInventory() {
+	let iLen = inventory.length;
+	if (iLen === 1) {
+		item1.innerHTML = content1;
+	}
+	// item2.innerHTML = content2;
+	// item3.innerHTML = content3;
+	// item4.innerHTML = content4;
+	// item5.innerHTML = content5;
+	// item6.innerHTML = content6;
+	// item7.innerHTML = content7;
+	// item8.innerHTML = content8;
+}
+
 
 const initialise = document.getElementById('init');
 const modal = document.getElementById("welcome");
@@ -48,39 +58,12 @@ const forwardMessage = "<p><em>You go forward.</em></p>";
 const backMessage = "<p><em>You go back.</em></p>";
 const leftMessage = "<p><em>You go left</em></p>";
 const rightMessage = "<p><em>You go right.</em></p>";
-const item1Message = "<p><em>You use the " + content1 + ". Except you don't because it's just a placeholder and I don't know how to do this bit yet.</em></p>";
-const item2Message = "<p><em>You use the " + content2 + ". Somebody is getting lucky! Shame you're alone. Posh wank time, is it?</em></p>";
-const item3Message = "<p><em>You use nothing. Because there's nothing here, ya see?.</em></p>";
-const item4Message = "<p><em>You use the " + content4 + ". Gross. Make sure you wash it before returning it to its owner.</em></p>";
-const item5Message = "<p><em>You use nothing. Because there's nothing here, ya see?.</em></p>";
-const item6Message = "<p><em>You use the " + content6 + ". Personally, I find that pretty insensitive.</em></p>";
-const item7Message = "<p><em>You use the " + content7 + ". Nom nom.</em></p>";
-const item8Message = "<p><em>You use nothing. Because there's nothing here, ya see?.</em></p>";
-const attackMessage = "<p><em>You attack something. I'm really not sure what yet, because I haven't gotten that far.</em></p>"
-// function() {
-// 	// YOU NEED TO WORK THIS OUT, DUDE
-// }
-const pickUpMessage = "<p><em>You pick up something. Who knows what though. I am still working out how to build parts of this thing.</em></p>"
-// function() {
-// 	// YOU NEED TO WORK THIS OUT, DUDE
-// }
-const searchMessage = "<p><em>You search... uh... your soul? Yeah, I haven't done this bit yet. So it doesn't do anything except for giving you this friendly message.</em></p>"
-// function() {
-// 	// YOU NEED TO WORK THIS OUT, DUDE
-// }
+
 
 goForward.addEventListener("click", forwardClick);
 goBack.addEventListener("click", backClick);
 goLeft.addEventListener("click", leftClick);
 goRight.addEventListener("click", rightClick);
-useItem1.addEventListener("click", clickUse1);
-useItem2.addEventListener("click", clickUse2);
-useItem3.addEventListener("click", clickUse3);
-useItem4.addEventListener("click", clickUse4);
-useItem5.addEventListener("click", clickUse5);
-useItem6.addEventListener("click", clickUse6);
-useItem7.addEventListener("click", clickUse7);
-useItem8.addEventListener("click", clickUse8);
 initialise.addEventListener("click", initGame);
 attack.addEventListener("click", attackIt);
 pickUp.addEventListener("click", pickItUp);
@@ -89,23 +72,21 @@ reset.addEventListener("click", startOver);
 
 
 const player = {
-	name: "Billy",
-	gender: "Male",
+	name: "Morton",
+	// gender: "Male",
 	class: "Lover",
 	strength: 50,
 	health: 10,
 }
 
-
-let whereAmI = "nowhere"
-
 const locBedroom = {
 	iteration: 0,
 	item: "condom",
-	searchable: "drawer",
+	searchable: 0,
 	enemy: "",
 	bed: 0,
-	wall: 0,
+	wallright: 0,
+	wallleft: 0,
 }
 
 const locForest = {
@@ -129,11 +110,11 @@ const locRoad = {
 	enemy: "",
 }
 
+
 // body.onload = enterBedroom();
 
 
-body.onload = displayModal();
-function displayModal() {
+body.onload = function displayModal() {
 	modalOverlay.style.display = "block";
 	modal.style.display = "block";
 }
@@ -155,7 +136,7 @@ function startOver() {
 function initGame() {
 	if (document.getElementById("charname").value.length !== 0) {
 	player.name = document.getElementById("charname").value;
-	player.gender = document.querySelector('input[name="charactergender"]:checked').value;
+	// player.gender = document.querySelector('input[name="charactergender"]:checked').value;
 	player.class = document.querySelector('input[name="characterstyle"]:checked').value;
 	player.strength = document.getElementById("charbuild").value;
 	enterBedroom();
@@ -174,80 +155,37 @@ function updateScroll() {
 function forwardClick() {
 	outputText.insertAdjacentHTML("beforeend", forwardMessage);
 	updateScroll();
-	moveCommand("forward");
+	command("forward");
 }
 
 function backClick() {
 	outputText.insertAdjacentHTML("beforeend", backMessage);
 	updateScroll();
-	moveCommand("backward");
+	command("backward");
 }
 
 function leftClick() {
 	outputText.insertAdjacentHTML("beforeend", leftMessage);
 	updateScroll();
-	moveCommand("left");
+	command("left");
 }
 
 function rightClick() {
 	outputText.insertAdjacentHTML("beforeend", rightMessage);
 	updateScroll();
-	moveCommand("right");
+	command("right");
 }
 
-function clickUse1() {
-	outputText.insertAdjacentHTML("beforeend", item1Message);
-	updateScroll();
-}
-
-function clickUse2() {
-	outputText.insertAdjacentHTML("beforeend", item2Message);
-	updateScroll();
-}
-
-function clickUse3() {
-	outputText.insertAdjacentHTML("beforeend", item3Message);
-	updateScroll();
-}
-
-function clickUse4() {
-	outputText.insertAdjacentHTML("beforeend", item4Message);
-	updateScroll();
-}
-
-function clickUse5() {
-	outputText.insertAdjacentHTML("beforeend", item5Message);
-	updateScroll();
-}
-
-function clickUse6() {
-	outputText.insertAdjacentHTML("beforeend", item6Message);
-	updateScroll();
-}
-
-function clickUse7() {
-	outputText.insertAdjacentHTML("beforeend", item7Message);
-	updateScroll();
-}
-
-function clickUse8() {
-	outputText.insertAdjacentHTML("beforeend", item8Message);
-	updateScroll();
-}
-
-function attackIt () {
-	outputText.insertAdjacentHTML("beforeend", attackMessage);
-	updateScroll();
+function attackIt() {
+	command("attack");
 }
 
 function searchIt() {
-	outputText.insertAdjacentHTML("beforeend", searchMessage);
-	updateScroll();
+	command("search");
 }
 
 function pickItUp() {
-	outputText.insertAdjacentHTML("beforeend", pickUpMessage);
-	updateScroll();
+	command("pickup");
 }
 
 
@@ -256,35 +194,55 @@ function enterBedroom () {
 	let i = locBedroom.iteration;
 	if (i === 0) {
 		outputText.insertAdjacentHTML("beforeend", "<h3>Chapter One - A Call to Adventure</h3><p>" + "You slowly awaken in a small, dim room. For a while, you can't remember your name. Then it comes to you.</p><p><em>" + player.name + "</em>.</p><p>" + player.name + " is your name.</p><p>What kind of cruel, malicious, evil bastard parents would name a child somthing like that? It's practically criminal.<p></p>You wipe away a bitter tear and scan the room. It is almost entirely bare, except for a nightstand with a single drawer. In front of you, there is a door.</p>");
-	} else if (i === 1) {
-		outputText.insertAdjacentHTML("beforeend", "<p>" + "You are back in the bedroom. It is unchanged. Infront of you is the door. The nightstand is still un-rifled-through.</p>");
-	} else if (i === 2) {
-		outputText.insertAdjacentHTML("beforeend", "<p>" + "You are back in the bedroom. Again.</p>");
-	} else if (i === 3) {
-		outputText.insertAdjacentHTML("beforeend", "<p>" + "What is it with you and this room, " + player.name + "? You are back in the bedroom.</p>");
+	} else if (i > 0 && locBedroom.searchable === 0) {
+		outputText.insertAdjacentHTML("beforeend", "<p>You are back in the bedroom. It is unchanged. Infront of you is the door. The nightstand is still un-rifled-through.</p>");
+	} else if (i === 1 && locBedroom.searchable === 1) {
+		outputText.insertAdjacentHTML("beforeend", "<p>You are back in the bedroom. It is unchanged. Infront of you is the door. The room is still a mess from your search.</p>");
+	} else if (i === 2 && locBedroom.searchable === 1) {
+		outputText.insertAdjacentHTML("beforeend", "<p>You are back in the bedroom. Again.</p>");
+	} else if (i === 3 && locBedroom.searchable === 1) {
+		outputText.insertAdjacentHTML("beforeend", "<p>What is it with you and this room, " + player.name + "? You are back in the bedroom.</p>");
 	} else {
-		outputText.insertAdjacentHTML("beforeend", "<p>" + "You. Bedroom. <em>Again.</em></p>");
+		outputText.insertAdjacentHTML("beforeend", "<p>You. Bedroom. <em>Again.</em></p>");
 	}
 	locBedroom.iteration++;
 	updateScroll();
 }
 
-function moveCommand(direction) {
+function enterForest () {
+	whereAmI = "forest";
+	let i = locForest.iteration;
+	if (i === 0) {
+		outputText.insertAdjacentHTML("beforeend", "<p>Directly outside the door to your bedroom, you find yourself in the middle of a dense, dark forest.");
+	} else if (i === 1) {
+		outputText.insertAdjacentHTML("beforeend", "<p></p>");
+	} else if (i === 2) {
+		outputText.insertAdjacentHTML("beforeend", "<p></p>");
+	} else if (i === 3) {
+		outputText.insertAdjacentHTML("beforeend", "<p></p>");
+	} else {
+		outputText.insertAdjacentHTML("beforeend", "<p></p>");
+	}
+	locBedroom.iteration++;
+	updateScroll();
+}
+
+function command(command) {
 	if (whereAmI === "bedroom") {
-		bedroomCommand(direction);
+		bedroomCommand(command);
+	} else {
+	forestCommand(command);
 	}
 }
 
-function bedroomCommand (direction) {
-	switch (direction) {
+function bedroomCommand (command) {
+	switch (command) {
 		case "forward":
-			direction = "";
-			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Sorry, you can't go forward yet, because I haven't programmed the next area. 😬</p><p> That weird squiggle was supposed to be the grimacing emoji, but I guess this font doesn't support emojis.</p> <p> Anyway, perhaps there's more you can do in the bedroom? You know - besides the obvious.</p>"), 500);
-			// setTimeout(enterForest, 1000);
+			// setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Sorry, you can't go forward yet, because I haven't programmed the next area. 😬</p><p> That weird squiggle was supposed to be the grimacing emoji, but I guess this font doesn't support emojis.</p> <p> Anyway, perhaps there's more you can do in the bedroom? You know - besides the obvious.</p>"), 500);
+			setTimeout(enterForest, 1000);
 			updateScroll();
 		break;
 		case "backward":
-			direction = "";
 			if (locBedroom.bed === 0) {
 				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p> I'm not sure you really want to go to bed. But if you really, really do, then you can try again.</p>"), 500);
 				locBedroom.bed++;
@@ -294,45 +252,123 @@ function bedroomCommand (direction) {
 			};
 		break;
 		case "left":
-			direction = "";
-			if (locBedroom.wall === 0) {
+			if (locBedroom.wallleft === 0 && locBedroom.wallright === 0) {
 				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You walked into the wall. You now have a nosebleed.</p>"), 500);
 				player.health--;
-				locBedroom.wall++;
+				locBedroom.wallleft++;
 				updateScroll();
-			} else if (locBedroom.wall > 0 && player.health > 0) {
+			} else if (locBedroom.wallleft === 0 && locBedroom.wallright > 0) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Okay, now you just walked into the other wall. Perhaps you're not really made for adventure.</p>"), 500);
+				player.health--;
+				locBedroom.wallleft++;
+				updateScroll();
+			} else if (locBedroom.wallleft > 0 && player.health > 2) {
 				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Seriously, why are you doing that? You're hurting yourself.</p>"), 500);
 				player.health--;
-				locBedroom.wall++;
+				locBedroom.wallleft++;
+				updateScroll();
+			} else if (locBedroom.wallleft > 0 && player.health === 2) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You are really very badly hurt. Please stop, for the sake of your family.</p>"), 500);
+				player.health--;
+				locBedroom.wallleft++;
+				updateScroll();
+			} else if (locBedroom.wallleft > 0 && player.health === 1) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You are going to die. You have to stop doing that!</p>"), 500);
+				player.health--;
+				locBedroom.wallleft++;
 				updateScroll();
 			} else {
 				gameOver("wall");
 			};
 		break;
 		case "right":
-			direction = "";
-			if (locBedroom.wall === 0) {
+			if (locBedroom.wallright === 0 && locBedroom.wallleft === 0) {
 				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You walked into the wall. You now have a nosebleed.</p>"), 500);
 				player.health--;
-				locBedroom.wall++;
+				locBedroom.wallright++;
 				updateScroll();
-			} else if (locBedroom.wall > 0 && player.health > 0) {
+			} else if (locBedroom.wallright > 0 && player.health > 2) {
 				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Seriously, why are you doing that? You're hurting yourself.</p>"), 500);
 				player.health--;
-				locBedroom.wall++;
+				locBedroom.wallright++;
+				updateScroll();
+			} else if (locBedroom.wallright === 0 && locBedroom.wallleft > 0) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Okay, now you just walked into the other wall. Perhaps you're not really made for adventure.</p>"), 500);
+				player.health--;
+				locBedroom.wallright++;
+				updateScroll();
+			} else if (locBedroom.wallright > 0 && player.health === 2) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You are really very badly hurt. Please stop, for the sake of your family.</p>"), 500);
+				player.health--;
+				locBedroom.wallright++;
+				updateScroll();
+			} else if (locBedroom.wallright > 0 && player.health === 1) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You are going to die. You have to stop doing that!</p>"), 500);
+				player.health--;
+				locBedroom.wallright++;
 				updateScroll();
 			} else {
 				gameOver("wall");
 			};
 		break;
+		case "attack":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>There is nothing to attack.</p>"), 500);
+			updateScroll();
+		break;
+		case "search":
+			if (locBedroom.searchable === 0) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You search the room. There isn't much here, but in the nightstand you find a single condom. You eye it suspiciously, wondering how long it's been there.</p>"), 500);
+				locBedroom.searchable = 1;
+				updateScroll();
+			} else {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You have already searched this room. There is nothing more to find.</p>"), 500);
+				updateScroll();
+			}
+		break;
+		case "pickup":
+			if (locBedroom.searchable === 0) {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You can't see anything obvious to pick up. Perhaps you should search the room, first.</p>"), 500);
+				updateScroll();
+			} else if (locBedroom.searchable === 1 && locBedroom.item === "") {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>There is nothing else to pick up.</p>"), 500);
+				updateScroll();
+			} else {
+				setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You pick up the condom.</p>"), 500);
+				locBedroom.item = "";
+				inventory.push("condom");
+				updateScroll();
+				updateInventory();
+			}
+		break;
+	};
+};
+
+function forestCommand (command) {
+	switch (command) {
+		case "forward":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>Sorry, you can't go forward yet, because I haven't programmed the next area. 😬</p>"), 500);
+			updateScroll();
+		break;
+		case "backward":
+			setTimeout(enterBedroom, 1000);
+			updateScroll();
+		break;
+		case "left":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You can't go left yet. I ain't written that bit.</p>"), 500);
+		break;
+		case "right":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>You can't go right yet. I ain't written that bit.</p>"), 500);
+		break;
+		case "attack":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>There is nothing to attack.</p>"), 500);
+			updateScroll();
+		break;
+		case "search":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>There is nothing to search.</p>"), 500);
+		break;
+		case "pickup":
+			setTimeout(outputText.insertAdjacentHTML("beforeend", "<p>There is nothing to pick up</p>"), 500);
+
+		break;
 	}
 }
-
-
-
-
-// const inventory = {"","","","","","","",""} // --> need to think on how to do this
-
-
-	
-

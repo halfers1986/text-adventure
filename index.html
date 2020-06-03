@@ -15,14 +15,14 @@
 				<div id="text"></div>
 				<div id="inv">
 					<h3>Inventory</h3>
-					<div class="slot" id="slot1"><div class="item" id="item1">Sword</div><button class="use" id="use1">Use</button></div>
-					<div class="slot" id="slot2"><div class="item" id="item2">Condom</div><button class="use" id="use2">Use</button></div>
-					<div class="slot" id="slot3"><div class="item" id="item3"></div><button class="use" id="use3">Use</button></div>
-					<div class="slot" id="slot4"><div class="item" id="item4">Used thong</div><button class="use" id="use4">Use</button></div>
-					<div class="slot" id="slot5"><div class="item" id="item5"></div><button class="use" id="use5">Use</button></div>
-					<div class="slot" id="slot6"><div class="item" id="item6">Wooden leg</div><button class="use" id="use6">Use</button></div>
-					<div class="slot" id="slot7"><div class="item" id="item7">Cronut</div><button class="use" id="use7">Use</button></div>
-					<div class="slot" id="slot8"><div class="item" id="item8"></div><button class="use" id="use8">Use</button></div>
+					<div class="slot" id="slot1"><div class="item" id="item1"></div><!-- <button class="use" id="use1">Use</button> --></div>
+					<div class="slot" id="slot2"><div class="item" id="item2"></div><!-- <button class="use" id="use2">Use</button> --></div>
+					<div class="slot" id="slot3"><div class="item" id="item3"></div><!-- <button class="use" id="use3">Use</button> --></div>
+					<div class="slot" id="slot4"><div class="item" id="item4"></div><!-- <button class="use" id="use4">Use</button> --></div>
+					<div class="slot" id="slot5"><div class="item" id="item5"></div><!-- <button class="use" id="use5">Use</button> --></div>
+					<div class="slot" id="slot6"><div class="item" id="item6"></div><!-- <button class="use" id="use6">Use</button> --></div>
+					<div class="slot" id="slot7"><div class="item" id="item7"></div><!-- <button class="use" id="use7">Use</button> --></div>
+					<div class="slot" id="slot8"><div class="item" id="item8"></div><!-- <button class="use" id="use8">Use</button> --></div>
 			</div>
 			<div id="controls">
 				<button class="directions" id="forward">Go forward</button>
@@ -32,6 +32,7 @@
 				<button class="action" id="attack">Attack!</button>
 				<button class="action" id="search">Search</button>
 				<button class="action" id="pickup">Pick up</button>
+				<button class="action" id="use">Use item</button>
 			</div>
 		</div>
 	</div>
@@ -41,12 +42,12 @@
 				<div id="introduction"><p>This is a short text-based game that I am building to practice my scripting abilities. If you're playing it, you're probably a friend, so please let me know what you think. Especially if it's praise. I <em>love</em> being praised.</p><p>To get started, lets build a character.</p></div>
 				<form name="form">
 					<label id="charactername" for="charactername"><strong>Character's name:</strong></label>
-					<input type="text" id="charname" name="charactername" placeholder="eg: 'Generic RPG Name'" required><br><br>
-					<label for="charactergender"><strong>Character's gender:</strong></label>
+					<input type="text" id="charname" name="charactername" placeholder="eg: 'Generic RPG Name'" required maxlength="20"><br><br>
+<!-- 					<label for="charactergender"><strong>Character's gender:</strong></label>
 					<label for="male">Male</label>
 					<input type="radio" name="charactergender" id="male" value="male" checked>
-					<label for="female">Female</label>
-					<input type="radio" name="charactergender" id="female" value="female"><br><br>
+					<label for="female">Female</label> -->
+					<!-- <input type="radio" name="charactergender" id="female" value="female"><br><br> -->
 					<label for="characterstyle"><strong>Character's style:</strong></label>
 					<label for="lover">Lover</label>
 					<input type="radio" name="characterstyle" id="lover" value="lover" checked>
